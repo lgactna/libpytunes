@@ -25,7 +25,8 @@ class Library:
         self.musicPathXML = musicPathXML
         self.musicPathSystem = musicPathSystem
         self.filesOnly = filesOnly
-        self.il = plistlib.readPlist(itunesxml)  # Much better support of xml special characters
+        with open(itunesxml, "rb") as fp:
+            self.il = plistlib.load(fp, fmt=plistlib.FMT_XML)  # Much better support of xml special characters
         self.songs = {}
         self.getSongs()
 
