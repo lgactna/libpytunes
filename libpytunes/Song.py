@@ -15,7 +15,7 @@ class Song:
     size = None (Integer)
     total_time = None (Integer)
     start_time = None (Integer)
-    end_time = None (Integer)
+    stop_time = None (Integer)
     track_number = None (Integer)
     track_count = None (Integer)
     disc_number = None (Integer)
@@ -59,7 +59,7 @@ class Song:
     size = None
     total_time = None
     start_time = None
-    end_time = None
+    stop_time = None
     track_number = None
     track_count = None
     disc_number = None

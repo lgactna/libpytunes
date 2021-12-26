@@ -53,7 +53,7 @@ class Library:
             s.size = int(attributes.get('Size')) if attributes.get('Size') else None
             s.total_time = attributes.get('Total Time')
             s.start_time = attributes.get('Start Time')
-            s.end_time = attributes.get('End Time')
+            s.stop_time = attributes.get('Stop Time')
             s.track_number = attributes.get('Track Number')
             s.track_count = int(attributes.get('Track Count')) if attributes.get('Track Count') else None
             s.disc_number = int(attributes.get('Disc Number')) if attributes.get('Disc Number') else None
