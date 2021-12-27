@@ -51,7 +51,7 @@ class Library:
             s.genre = attributes.get('Genre')
             s.kind = attributes.get('Kind')
             s.size = int(attributes.get('Size')) if attributes.get('Size') else None
-            s.total_time = attributes.get('Total Time')
+            s.total_time = int(attributes.get('Total Time')) if attributes.get('Total Time') else None
             s.start_time = int(attributes.get('Start Time')) if attributes.get('Start Time') else None
             s.stop_time = int(attributes.get('Stop Time')) if attributes.get('Stop Time') else None
             s.track_number = attributes.get('Track Number')
@@ -83,7 +83,6 @@ class Library:
             s.lastplayed = time.strptime(str(attributes.get('Play Date UTC')), format) if attributes.get('Play Date UTC') else None
             s.skip_count = int(attributes.get('Skip Count')) if attributes.get('Skip Count') else None
             s.skip_date = time.strptime(str(attributes.get('Skip Date')), format) if attributes.get('Skip Date') else None
-            s.length = int(attributes.get('Total Time')) if attributes.get('Total Time') else None
             s.track_type = attributes.get('Track Type')
             s.grouping = attributes.get('Grouping')
             s.podcast = 'Podcast' in attributes
