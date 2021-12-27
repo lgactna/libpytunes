@@ -1,5 +1,6 @@
 from six import iteritems
-
+from datetime import datetime
+from time import mktime
 
 class Song:
     """
@@ -37,7 +38,6 @@ class Song:
     lastplayed = None (Time)
     skip_count = None (Integer)
     skip_date = None (Time)
-    length = None (Integer)
     persistent_id = None (String)
     album_rating_computed = False (Boolean)
     work = None (String)
@@ -81,7 +81,6 @@ class Song:
     compilation = None
     grouping = None
     lastplayed = None
-    length = None
     persistent_id = None
     album_rating_computed = None
     work = None
@@ -98,3 +97,72 @@ class Song:
 
     def ToDict(self):
         return {key: value for (key, value) in self}
+
+    def to_formatted_dict(self):
+        """
+        Returns dictionary with keys identical to the original XML format.
+        """
+        # Dictionary mapping variable names to formal names.
+        formal_names = {'name': 'Name',
+                        'work': 'Work',
+                        'movement_number': 'Movement Number',
+                        'movement_count': 'Movement Count',
+                        'movement_name': 'Movement Name',
+                        'track_id': 'Track ID',
+                        'artist': 'Artist',
+                        'album_artist': 'Album Artist',
+                        'composer': 'Composer',
+                        'album': 'Album',
+                        'genre': 'Genre',
+                        'kind': 'Kind',
+                        'size': 'Size',
+                        'total_time': 'Total Time',
+                        'start_time': 'Start Time',
+                        'stop_time': 'Stop Time',
+                        'track_number': 'Track Number',
+                        'track_count': 'Track Count',
+                        'disc_number': 'Disc Number',
+                        'disc_count': 'Disc Count',
+                        'year': 'Year',
+                        'date_modified': 'Date Modified',
+                        'date_added': 'Date Added',
+                        'bit_rate': 'Bit Rate',
+                        'sample_rate': 'Sample Rate',
+                        'comments': 'Comments',
+                        'rating': 'Rating',
+                        'rating_computed': 'Rating Computed',
+                        'play_count': 'Play Count',
+                        'album_rating': 'Album Rating',
+                        'album_rating_computed': 'Album Rating Computed',
+                        'persistent_id': 'Persistent ID',
+                        'location_escaped': 'Location',
+                        'compilation': 'Compilation',
+                        'lastplayed': 'Play Date UTC',
+                        'skip_count': 'Skip Count',
+                        'skip_date': 'Skip Date',
+                        'track_type': 'Track Type',
+                        'grouping': 'Grouping',
+                        'podcast': 'Podcast',
+                        'movie': 'Movie',
+                        'has_video': 'Has Video',
+                        'loved': 'Loved',
+                        'album_loved': 'Album Loved',
+                        'playlist_only': 'Playlist Only',
+                        'apple_music': 'Apple Music',
+                        'protected': 'Protected'
+                        }
+
+        result = {}
+        for key, value in self:
+            if value is not None and value is not False:
+                if key == 'location':
+                    # Only escaped locations are used
+                    continue
+                if key in ['date_modified', 'date_added', 'lastplayed', 'skip_date']:
+                    # Convert to datetime object
+                    result[formal_names[key]] = datetime.fromtimestamp(mktime(value))
+                else:
+                    # No conversion necessary
+                    result[formal_names[key]] = value
+
+        return result
