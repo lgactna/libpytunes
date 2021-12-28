@@ -5,83 +5,111 @@ from time import mktime
 class Song:
     """
     Song Attributes:
-    name (String)
     track_id (Integer)
-    artist (String)
-    album_artist (String)
-    composer = None (String)
-    album = None (String)
-    genre = None (String)
-    kind = None (String)
     size = None (Integer)
     total_time = None (Integer)
     start_time = None (Integer)
     stop_time = None (Integer)
-    track_number = None (Integer)
-    track_count = None (Integer)
     disc_number = None (Integer)
     disc_count = None (Integer)
+    track_number = None (Integer)
+    track_count = None (Integer)
     year = None (Integer)
+    bpm = None (Integer)
     date_modified = None (Time)
     date_added = None (Time)
     bit_rate = None (Integer)
     sample_rate = None (Integer)
-    comments = None (String)
+    volume_adjustment = None (Integer)
     rating = None (Integer)
     rating_computed = False (Boolean)
-    album_rating = None (Integer)
     play_count = None (Integer)
-    location = None (String)
-    location_escaped = None (String)
-    compilation = False (Boolean)
-    grouping = None (String)
     lastplayed = None (Time)
     skip_count = None (Integer)
     skip_date = None (Time)
+    loved = False (Boolean)
+    disliked = False (Boolean)
+    compilation = False (Boolean)
+    artwork_count = None (Integer)
     persistent_id = None (String)
+    track_type = None (String)
+    file_folder_count = None (Integer)
+    library_folder_count = None (Integer)
+    name (String)
+    artist (String)
+    album_artist (String)
+    composer = None (String)
+    album = None (String)
+    grouping = None (String)
+    genre = None (String)
+    kind = None (String)
+    equalizer = None (String)
+    comments = None (String)
+    sort_album = None (String)
+    location = None (String)
+    location_escaped = None (String)
+
+    album_rating = None (Integer)
     album_rating_computed = False (Boolean)
     work = None (String)
     movement_name = None (String)
     movement_number = None (Integer)
     movement_count = None (Integer)
-    playlist_only = None (Bool)
-    apple_music = None (Bool)
-    protected = None (Bool)
+
+    podcast = False (Boolean)
+    movie = False (Boolean)
+    has_video = False (Boolean)
+    album_loved = False (Boolean)
+    playlist_only = False (Boolean)
+    apple_music = False (Boolean)
+    protected = False (Boolean)
     """
-    name = None
     track_id = None
-    artist = None
-    album_artist = None
-    composer = None
-    album = None
-    genre = None
-    kind = None
     size = None
     total_time = None
     start_time = None
     stop_time = None
-    track_number = None
-    track_count = None
     disc_number = None
     disc_count = None
+    track_number = None
+    track_count = None
     year = None
+    bpm = None
     date_modified = None
     date_added = None
     bit_rate = None
     sample_rate = None
-    comments = None
-    rating = None
-    rating_computed = None
-    album_rating = None
+    volume_adjustment = None
     play_count = None
+    lastplayed = None
     skip_count = None
     skip_date = None
+    rating = None
+    rating_computed = None
+    loved = None
+    disliked = None
+    compilation = None
+    artwork_count = None
+    persistent_id = None
+    track_type = None
+    file_folder_count = None
+    library_folder_count = None
+    name = None
+    artist = None
+    album_artist = None
+    composer = None
+    album = None
+    grouping = None
+    genre = None
+    kind = None
+    equalizer = None #
+    comments = None
+    sort_album = None
     location = None
     location_escaped = None
-    compilation = None
-    grouping = None
-    lastplayed = None
-    persistent_id = None
+
+    # All fields below are fields I do not know the typical position of.
+    album_rating = None
     album_rating_computed = None
     work = None
     movement_name = None
@@ -103,53 +131,61 @@ class Song:
         Returns dictionary with keys identical to the original XML format.
         """
         # Dictionary mapping variable names to formal names.
-        formal_names = {'name': 'Name',
-                        'work': 'Work',
-                        'movement_number': 'Movement Number',
-                        'movement_count': 'Movement Count',
-                        'movement_name': 'Movement Name',
-                        'track_id': 'Track ID',
-                        'artist': 'Artist',
-                        'album_artist': 'Album Artist',
-                        'composer': 'Composer',
-                        'album': 'Album',
-                        'genre': 'Genre',
-                        'kind': 'Kind',
+        formal_names = {'track_id': 'Track ID',
                         'size': 'Size',
                         'total_time': 'Total Time',
                         'start_time': 'Start Time',
                         'stop_time': 'Stop Time',
-                        'track_number': 'Track Number',
-                        'track_count': 'Track Count',
                         'disc_number': 'Disc Number',
                         'disc_count': 'Disc Count',
+                        'track_number': 'Track Number',
+                        'track_count': 'Track Count',
                         'year': 'Year',
+                        'bpm': 'BPM',
                         'date_modified': 'Date Modified',
                         'date_added': 'Date Added',
                         'bit_rate': 'Bit Rate',
                         'sample_rate': 'Sample Rate',
-                        'comments': 'Comments',
-                        'rating': 'Rating',
-                        'rating_computed': 'Rating Computed',
+                        'volume_adjustment': 'Volume Adjustment',
                         'play_count': 'Play Count',
-                        'album_rating': 'Album Rating',
-                        'album_rating_computed': 'Album Rating Computed',
-                        'persistent_id': 'Persistent ID',
-                        'location_escaped': 'Location',
-                        'compilation': 'Compilation',
                         'lastplayed': 'Play Date UTC',
                         'skip_count': 'Skip Count',
                         'skip_date': 'Skip Date',
+                        'rating': 'Rating',
+                        'rating_computed': 'Rating Computed',
+                        'loved': 'Loved',
+                        'disliked': 'Disliked',
+                        'compilation': 'Compilation',
+                        'artwork_count': 'Artwork Count',
+                        'persistent_id': 'Persistent ID',
                         'track_type': 'Track Type',
+                        'file_folder_count': 'File Folder Count',
+                        'library_folder_count': 'Library Folder Count',
+                        'name': 'Name',
+                        'artist': 'Artist',
+                        'album_artist': 'Album Artist',
+                        'composer': 'Composer',
+                        'album': 'Album',
                         'grouping': 'Grouping',
+                        'genre': 'Genre',
+                        'kind': 'Kind',
+                        'equalizer': 'Equalizer',
+                        'comments': 'Comments',
+                        'sort_album': 'Sort Album',
+                        'location_escaped': 'Location',
+                        'album_rating': 'Album Rating',
+                        'album_rating_computed': 'Album Rating Computed',
+                        'work': 'Work',
+                        'movement_number': 'Movement Number',
+                        'movement_count': 'Movement Count',
+                        'movement_name': 'Movement Name',
                         'podcast': 'Podcast',
                         'movie': 'Movie',
                         'has_video': 'Has Video',
-                        'loved': 'Loved',
                         'album_loved': 'Album Loved',
                         'playlist_only': 'Playlist Only',
                         'apple_music': 'Apple Music',
-                        'protected': 'Protected'
+                        'protected': 'Protected',
                         }
 
         result = {}

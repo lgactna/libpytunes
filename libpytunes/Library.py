@@ -38,42 +38,70 @@ class Library:
         for trackid, attributes in self.il['Tracks'].items():
             s = Song()
 
-            s.name = attributes.get('Name')
-
-            # Support classical music naming (Work+Movement Number+Movement Name) since iTunes 12.5
-            s.work = attributes.get('Work')
-            s.movement_number = attributes.get('Movement Number')
-            s.movement_count = attributes.get('Movement Count')
-            s.movement_name = attributes.get('Movement Name')
-
             s.track_id = int(attributes.get('Track ID')) if attributes.get('Track ID') else None
+            s.size = int(attributes.get('Size')) if attributes.get('Size') else None
+
+            # Timing
+            s.total_time = int(attributes.get('Total Time')) if attributes.get('Total Time') else None
+            s.start_time = int(attributes.get('Start Time')) if attributes.get('Start Time') else None
+            s.stop_time = int(attributes.get('Stop Time')) if attributes.get('Stop Time') else None
+
+            # Disc/track info
+            s.disc_number = int(attributes.get('Disc Number')) if attributes.get('Disc Number') else None
+            s.disc_count = int(attributes.get('Disc Count')) if attributes.get('Disc Count') else None
+            s.track_number = attributes.get('Track Number')
+            s.track_count = int(attributes.get('Track Count')) if attributes.get('Track Count') else None
+            s.year = int(attributes.get('Year')) if attributes.get('Year') else None
+            s.bpm = int(attributes.get('BPM')) if attributes.get('BPM') else None
+            s.date_modified = time.strptime(str(attributes.get('Date Modified')), format) if attributes.get(
+                'Date Modified') else None
+            s.date_added = time.strptime(str(attributes.get('Date Added')), format) if attributes.get(
+                'Date Added') else None
+            s.bit_rate = int(attributes.get('Bit Rate')) if attributes.get('Bit Rate') else None
+            s.sample_rate = int(attributes.get('Sample Rate')) if attributes.get('Sample Rate') else None
+            s.volume_adjustment = int(attributes.get('Volume Adjustment')) if attributes.get(
+                'Volume Adjustment') else None
+
+            # Play and skip stats
+            s.play_count = int(attributes.get('Play Count')) if attributes.get('Play Count') else None
+            s.lastplayed = time.strptime(str(attributes.get('Play Date UTC')), format) if attributes.get(
+                'Play Date UTC') else None
+            s.skip_count = int(attributes.get('Skip Count')) if attributes.get('Skip Count') else None
+            s.skip_date = time.strptime(str(attributes.get('Skip Date')), format) if attributes.get(
+                'Skip Date') else None
+
+            # Rating
+            s.rating = int(attributes.get('Rating')) if attributes.get('Rating') else None
+            s.rating_computed = 'Rating Computed' in attributes
+            s.loved = 'Loved' in attributes
+            s.disliked = 'Disliked' in attributes
+
+            # Is part of compilation?
+            s.compilation = 'Compilation' in attributes
+
+            # Internal metadata
+            s.artwork_count = int(attributes.get('Artwork Count')) if attributes.get('Artwork Count') else None
+            s.persistent_id = attributes.get('Persistent ID')
+            s.track_type = attributes.get('Track Type')
+            s.file_folder_count = int(attributes.get('File Folder Count')) if attributes.get(
+                'File Folder Count') else None
+            s.library_folder_count = int(attributes.get('Library Folder Count')) if attributes.get(
+                'Library Folder Count') else None
+
+            # Actual track info
+            s.name = attributes.get('Name')
             s.artist = attributes.get('Artist')
             s.album_artist = attributes.get('Album Artist')
             s.composer = attributes.get('Composer')
             s.album = attributes.get('Album')
+            s.grouping = attributes.get('Grouping')
             s.genre = attributes.get('Genre')
             s.kind = attributes.get('Kind')
-            s.size = int(attributes.get('Size')) if attributes.get('Size') else None
-            s.total_time = int(attributes.get('Total Time')) if attributes.get('Total Time') else None
-            s.start_time = int(attributes.get('Start Time')) if attributes.get('Start Time') else None
-            s.stop_time = int(attributes.get('Stop Time')) if attributes.get('Stop Time') else None
-            s.track_number = attributes.get('Track Number')
-            s.track_count = int(attributes.get('Track Count')) if attributes.get('Track Count') else None
-            s.disc_number = int(attributes.get('Disc Number')) if attributes.get('Disc Number') else None
-            s.disc_count = int(attributes.get('Disc Count')) if attributes.get('Disc Count') else None
-            s.year = int(attributes.get('Year')) if attributes.get('Year') else None
-            s.date_modified = time.strptime(str(attributes.get('Date Modified')), format) if attributes.get('Date Modified') else None
-            s.date_added = time.strptime(str(attributes.get('Date Added')), format) if attributes.get('Date Added') else None
-            s.bit_rate = int(attributes.get('Bit Rate')) if attributes.get('Bit Rate') else None
-            s.sample_rate = int(attributes.get('Sample Rate')) if attributes.get('Sample Rate') else None
-            s.comments = attributes.get("Comments")
-            s.rating = int(attributes.get('Rating')) if attributes.get('Rating') else None
-            s.rating_computed = 'Rating Computed' in attributes
-            s.play_count = int(attributes.get('Play Count')) if attributes.get('Play Count') else None
-            s.album_rating = attributes.get('Album Rating')
-            s.album_rating_computed = 'Album Rating Computed' in attributes
-            s.persistent_id = attributes.get('Persistent ID')
 
+            # More iTunes specific stuff
+            s.equalizer = attributes.get('Equalizer')
+            s.comments = attributes.get('Comments')
+            s.sort_album = attributes.get('Sort Album')
             if attributes.get('Location'):
                 s.location_escaped = attributes.get('Location')
                 s.location = s.location_escaped
@@ -82,16 +110,19 @@ class Library:
                 if (self.musicPathXML is not None and self.musicPathSystem is not None):
                     s.location = s.location.replace(self.musicPathXML, self.musicPathSystem)
 
-            s.compilation = 'Compilation' in attributes
-            s.lastplayed = time.strptime(str(attributes.get('Play Date UTC')), format) if attributes.get('Play Date UTC') else None
-            s.skip_count = int(attributes.get('Skip Count')) if attributes.get('Skip Count') else None
-            s.skip_date = time.strptime(str(attributes.get('Skip Date')), format) if attributes.get('Skip Date') else None
-            s.track_type = attributes.get('Track Type')
-            s.grouping = attributes.get('Grouping')
+            # All fields below are fields I don't know the position of
+            s.album_rating = attributes.get('Album Rating')
+            s.album_rating_computed = 'Album Rating Computed' in attributes
+
+            # Support classical music naming (Work+Movement Number+Movement Name) since iTunes 12.5
+            s.work = attributes.get('Work')
+            s.movement_number = attributes.get('Movement Number')
+            s.movement_count = attributes.get('Movement Count')
+            s.movement_name = attributes.get('Movement Name')
+
             s.podcast = 'Podcast' in attributes
             s.movie = 'Movie' in attributes
             s.has_video = 'Has Video' in attributes
-            s.loved = 'Loved' in attributes
             s.album_loved = 'Album Loved' in attributes
             s.playlist_only = 'Playlist Only' in attributes
             s.apple_music = 'Apple Music' in attributes
